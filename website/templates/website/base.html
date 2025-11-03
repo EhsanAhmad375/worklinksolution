@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_settings.company_name }}{% if site_settings.tagline %} - {{ site_settings.tagline }}{% endif %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'website/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                {% if site_settings.website_url %}
+                <a href="{{ site_settings.website_url }}" target="_blank" class="logo-link">
+                {% endif %}
+                <div class="logo">
+                    {% if site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.company_name }}" class="logo-image">
+                    {% else %}
+                        <i class="fas fa-code"></i>
+                    {% endif %}
+                    <span>{{ site_settings.company_name }}</span>
+                </div>
+                {% if site_settings.website_url %}
+                </a>
+                {% endif %}
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                    <li><a href="#team" class="nav-link">Team</a></li>
+                    <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="#contact" class="nav-link btn-primary">Get Started</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+            <button class="close-alert">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    {% if site_settings.website_url %}
+                    <h3><a href="{{ site_settings.website_url }}" target="_blank" style="color: inherit; text-decoration: none;">{{ site_settings.company_name }}</a></h3>
+                    {% else %}
+                    <h3>{{ site_settings.company_name }}</h3>
+                    {% endif %}
+                    <p>{{ site_settings.tagline }}</p>
+                    {% if site_settings.website_url %}
+                    <p style="margin-top: 0.5rem;"><a href="{{ site_settings.website_url }}" target="_blank" style="color: #45D3DC; text-decoration: none;"><i class="fas fa-globe"></i> {{ site_settings.website_url }}</a></p>
+                    {% endif %}
+                    <div class="social-links">
+                        {% if site_settings.facebook_url %}
+                        <a href="{{ site_settings.facebook_url }}" target="_blank"><i class="fab fa-facebook"></i></a>
+                        {% endif %}
+                        {% if site_settings.twitter_url %}
+                        <a href="{{ site_settings.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if site_settings.linkedin_url %}
+                        <a href="{{ site_settings.linkedin_url }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if site_settings.github_url %}
+                        <a href="{{ site_settings.github_url }}" target="_blank"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#team">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> {{ site_settings.email }}</li>
+                        <li><i class="fas fa-phone"></i> {{ site_settings.phone }}</li>
+                        <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.address }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} {{ site_settings.company_name }}. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'website/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
