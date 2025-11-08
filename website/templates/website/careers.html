@@ -31,7 +31,7 @@
                     </form>
                 </div>
                 
-                <div class="filter-separator">></div>
+                
                 
                 <!-- Department Filter -->
                 {% if departments %}
@@ -49,11 +49,10 @@
                                 <option value="{{ dept }}" {% if current_filters.department == dept %}selected{% endif %}>{{ dept }}</option>
                                 {% endfor %}
                             </select>
-                            <i class="fas fa-chevron-down select-arrow-inline"></i>
                         </div>
                     </form>
-                </div>
-                <div class="filter-separator">></div>
+                </div> 
+                
                 {% endif %}
                 
                 <!-- Job Type Filter -->
@@ -72,11 +71,10 @@
                                 <option value="{{ job_type }}" {% if current_filters.job_type == job_type %}selected{% endif %}>{{ job_type|title }}</option>
                                 {% endfor %}
                             </select>
-                            <i class="fas fa-chevron-down select-arrow-inline"></i>
                         </div>
                     </form>
                 </div>
-                <div class="filter-separator">></div>
+                
                 {% endif %}
                 
                 <!-- Experience Level Filter -->
@@ -95,11 +93,10 @@
                                 <option value="{{ exp }}" {% if current_filters.experience == exp %}selected{% endif %}>{{ exp|title }}</option>
                                 {% endfor %}
                             </select>
-                            <i class="fas fa-chevron-down select-arrow-inline"></i>
                         </div>
                     </form>
                 </div>
-                <div class="filter-separator">></div>
+                
                 {% endif %}
                 
                 <!-- Location Filter -->
@@ -118,7 +115,6 @@
                                 <option value="{{ loc }}" {% if current_filters.location == loc %}selected{% endif %}>{{ loc }}</option>
                                 {% endfor %}
                             </select>
-                            <i class="fas fa-chevron-down select-arrow-inline"></i>
                         </div>
                     </form>
                 </div>
@@ -126,7 +122,7 @@
                 
                 <!-- Clear Filters -->
                 {% if current_filters.department or current_filters.job_type or current_filters.experience or current_filters.location or current_filters.search %}
-                <div class="filter-separator">></div>
+                
                 <div class="filter-cell filter-clear">
                     <a href="{% url 'careers' %}" class="btn-clear-filters-inline">
                         <i class="fas fa-times-circle"></i>
@@ -179,15 +175,15 @@
                         </div>
                         {% endif %}
                         <div class="job-listing-actions">
-                            <button class="btn btn-primary" onclick="openJobModal({{ job.id }})">View Details & Apply</button>
+                        <button class="btn btn-primary" data-job-id="{{ job.id }}">View Details & Apply</button>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
                 <div class="no-jobs">
-                    <i class="fas fa-briefcase"></i>
-                    <h3>No jobs found</h3>
+                    <i class="fas fa-briefcase"></i> 
+                    <h3>No jobs found</h3> 
                     <p>Try adjusting your filters or check back later for new opportunities.</p>
                     <a href="{% url 'careers' %}" class="btn btn-primary">View All Jobs</a>
                 </div>
