@@ -130,6 +130,14 @@ class SiteSetting(models.Model):
     linkedin_url = models.URLField(blank=True, help_text="LinkedIn company page URL")
     github_url = models.URLField(blank=True, help_text="GitHub profile/company URL")
     
+    # Email Notification Settings
+    notification_email = models.EmailField(blank=True, help_text="Email address where project requests will be sent")
+    smtp_host = models.CharField(max_length=200, blank=True, help_text="SMTP server host (e.g., smtp.gmail.com)")
+    smtp_port = models.IntegerField(default=587, help_text="SMTP server port (587 for TLS, 465 for SSL)")
+    smtp_username = models.EmailField(blank=True, help_text="SMTP username (usually your email address)")
+    smtp_password = models.CharField(max_length=200, blank=True, help_text="SMTP password or app password")
+    use_tls = models.BooleanField(default=True, help_text="Use TLS encryption (recommended)")
+    
     class Meta:
         verbose_name = "Site Settings"
         verbose_name_plural = "Site Settings"

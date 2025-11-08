@@ -69,6 +69,10 @@ class SiteSettingAdmin(admin.ModelAdmin):
             'fields': ('facebook_url', 'twitter_url', 'linkedin_url', 'github_url'),
             'description': 'Add your social media profiles (optional).'
         }),
+        ('Email Notification Settings', {
+            'fields': ('notification_email', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'use_tls'),
+            'description': 'Configure email settings to receive project requests via email. For Gmail, use smtp.gmail.com with port 587 and enable "Less secure app access" or use an App Password. For other providers, check their SMTP settings.'
+        }),
     )
     
     def has_add_permission(self, request):

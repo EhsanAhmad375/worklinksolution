@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
-from .models import Service, Project, TeamMember, Testimonial, ProjectRequest
+from django.core.mail import EmailMessage, get_connection
+from .models import Service, Project, TeamMember, Testimonial, ProjectRequest, SiteSetting
 
 
 def home(request):
@@ -10,7 +11,7 @@ def home(request):
     featured_projects = Project.objects.filter(featured=True)[:6]
     all_projects = Project.objects.all()[:9]
     team_members = TeamMember.objects.filter(is_active=True)[:4]
-    testimonials = Testimonial.objects.filter(featured=True)[:6]
+    testimonials = Testimonial.objects.all()[:6]
     
     context = {
         'services': services,
@@ -39,7 +40,7 @@ def submit_project_request(request):
         return redirect('home')
     
     # Create project request
-    ProjectRequest.objects.create(
+    project_request = ProjectRequest.objects.create(
         name=name,
         email=email,
         phone=phone,
@@ -48,6 +49,51 @@ def submit_project_request(request):
         budget=budget,
         description=description,
     )
+    
+    # Send email notification if email settings are configured
+    try:
+        site_settings = SiteSetting.objects.first()
+        if site_settings and site_settings.notification_email and site_settings.smtp_host and site_settings.smtp_username and site_settings.smtp_password:
+            # Configure email backend dynamically
+            email_connection = get_connection(
+                host=site_settings.smtp_host,
+                port=site_settings.smtp_port,
+                username=site_settings.smtp_username,
+                password=site_settings.smtp_password,
+                use_tls=site_settings.use_tls,
+            )
+            
+            # Prepare email content
+            subject = f"New Project Request: {project_type}"
+            message = f"""
+New project request received from your website:
+
+Name: {name}
+Email: {email}
+Phone: {phone if phone else 'Not provided'}
+Company: {company_name if company_name else 'Not provided'}
+Project Type: {project_type}
+Budget: {budget if budget else 'Not specified'}
+
+Project Description:
+{description}
+
+---
+This request has been saved in your admin panel.
+"""
+            
+            # Send email
+            email_message = EmailMessage(
+                subject=subject,
+                body=message,
+                from_email=site_settings.smtp_username,
+                to=[site_settings.notification_email],
+                connection=email_connection,
+            )
+            email_message.send()
+    except Exception as e:
+        # Log error but don't fail the request
+        print(f"Error sending email notification: {str(e)}")
     
     messages.success(request, 'Thank you! We have received your project request. We will contact you soon.')
     return redirect('home')
