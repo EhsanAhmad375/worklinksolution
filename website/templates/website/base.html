@@ -14,32 +14,29 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
-                {% if site_settings.website_url %}
-                <a href="{{ site_settings.website_url }}" target="_blank" class="logo-link">
-                {% endif %}
-                <div class="logo">
-                    {% if site_settings.logo %}
-                        <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.company_name }}" class="logo-image">
-                    {% else %}
-                        <i class="fas fa-code"></i>
-                    {% endif %}
-                    <span>{{ site_settings.company_name }}</span>
-                </div>
-                {% if site_settings.website_url %}
+                <a href="{% url 'home' %}" class="logo-link">
+                    <div class="logo">
+                        {% if site_settings.logo %}
+                            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.company_name }}" class="logo-image">
+                        {% else %}
+                            <i class="fas fa-code"></i>
+                        {% endif %}
+                        <span>{{ site_settings.company_name }}</span>
+                    </div>
                 </a>
-                {% endif %}
                 <button class="mobile-menu-toggle" id="mobileMenuToggle">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="#home" class="nav-link">Home</a></li>
-                    <li><a href="#services" class="nav-link">Services</a></li>
-                    <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
-                    <li><a href="#team" class="nav-link">Team</a></li>
-                    <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
-                    <li><a href="#contact" class="nav-link btn-primary">Get Started</a></li>
+                    <li><a href="{% url 'home' %}#home" class="nav-link">Home</a></li>
+                    <li><a href="{% url 'home' %}#services" class="nav-link">Services</a></li>
+                    <li><a href="{% url 'home' %}#portfolio" class="nav-link">Portfolio</a></li>
+                    <li><a href="{% url 'home' %}#team" class="nav-link">Team</a></li>
+                    <li><a href="{% url 'home' %}#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="{% url 'careers' %}" class="nav-link">Careers</a></li>
+                    <li><a href="{% url 'home' %}#contact" class="nav-link btn-primary">Get Started</a></li>
                 </ul>
             </div>
         </div>

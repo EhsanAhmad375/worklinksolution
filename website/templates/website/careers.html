@@ -1,0 +1,209 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Careers - {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<!-- Careers Hero Section -->
+<section class="careers-hero">
+    <div class="container">
+        <div class="careers-hero-content">
+            <h3 class="hero-subtitle-small">Work with us</h3>
+            <h1>Join Our Team</h1>
+            <p>Explore exciting career opportunities and be part of our innovative team</p>
+        </div>
+    </div>
+</section>
+
+<!-- Careers Section -->
+<section class="careers-page section">
+    <div class="container">
+        <!-- Filters Row -->
+        <div class="filters-row-container">
+            <div class="filters-row-table">
+                <!-- Search -->
+                <div class="filter-cell">
+                    <span class="filter-label">Search</span>
+                    <form method="get" action="{% url 'careers' %}" class="search-form-inline">
+                        <div class="search-input-wrapper-inline">
+                            <input type="text" name="search" placeholder="Search jobs..." value="{{ current_filters.search }}">
+                            <button type="submit" class="search-btn-inline"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="filter-separator">></div>
+                
+                <!-- Department Filter -->
+                {% if departments %}
+                <div class="filter-cell">
+                    <span class="filter-label">Department</span>
+                    <form method="get" action="{% url 'careers' %}" class="filter-form-inline">
+                        {% if current_filters.search %}<input type="hidden" name="search" value="{{ current_filters.search }}">{% endif %}
+                        {% if current_filters.job_type %}<input type="hidden" name="job_type" value="{{ current_filters.job_type }}">{% endif %}
+                        {% if current_filters.experience %}<input type="hidden" name="experience" value="{{ current_filters.experience }}">{% endif %}
+                        {% if current_filters.location %}<input type="hidden" name="location" value="{{ current_filters.location }}">{% endif %}
+                        <div class="select-wrapper-inline">
+                            <select name="department" onchange="this.form.submit()" class="styled-select-inline">
+                                <option value="">All Departments</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept }}" {% if current_filters.department == dept %}selected{% endif %}>{{ dept }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow-inline"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="filter-separator">></div>
+                {% endif %}
+                
+                <!-- Job Type Filter -->
+                {% if job_types %}
+                <div class="filter-cell">
+                    <span class="filter-label">Job Type</span>
+                    <form method="get" action="{% url 'careers' %}" class="filter-form-inline">
+                        {% if current_filters.search %}<input type="hidden" name="search" value="{{ current_filters.search }}">{% endif %}
+                        {% if current_filters.department %}<input type="hidden" name="department" value="{{ current_filters.department }}">{% endif %}
+                        {% if current_filters.experience %}<input type="hidden" name="experience" value="{{ current_filters.experience }}">{% endif %}
+                        {% if current_filters.location %}<input type="hidden" name="location" value="{{ current_filters.location }}">{% endif %}
+                        <div class="select-wrapper-inline">
+                            <select name="job_type" onchange="this.form.submit()" class="styled-select-inline">
+                                <option value="">All Types</option>
+                                {% for job_type in job_types %}
+                                <option value="{{ job_type }}" {% if current_filters.job_type == job_type %}selected{% endif %}>{{ job_type|title }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow-inline"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="filter-separator">></div>
+                {% endif %}
+                
+                <!-- Experience Level Filter -->
+                {% if experience_levels %}
+                <div class="filter-cell">
+                    <span class="filter-label">Experience</span>
+                    <form method="get" action="{% url 'careers' %}" class="filter-form-inline">
+                        {% if current_filters.search %}<input type="hidden" name="search" value="{{ current_filters.search }}">{% endif %}
+                        {% if current_filters.department %}<input type="hidden" name="department" value="{{ current_filters.department }}">{% endif %}
+                        {% if current_filters.job_type %}<input type="hidden" name="job_type" value="{{ current_filters.job_type }}">{% endif %}
+                        {% if current_filters.location %}<input type="hidden" name="location" value="{{ current_filters.location }}">{% endif %}
+                        <div class="select-wrapper-inline">
+                            <select name="experience" onchange="this.form.submit()" class="styled-select-inline">
+                                <option value="">All Levels</option>
+                                {% for exp in experience_levels %}
+                                <option value="{{ exp }}" {% if current_filters.experience == exp %}selected{% endif %}>{{ exp|title }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow-inline"></i>
+                        </div>
+                    </form>
+                </div>
+                <div class="filter-separator">></div>
+                {% endif %}
+                
+                <!-- Location Filter -->
+                {% if locations %}
+                <div class="filter-cell">
+                    <span class="filter-label">Location</span>
+                    <form method="get" action="{% url 'careers' %}" class="filter-form-inline">
+                        {% if current_filters.search %}<input type="hidden" name="search" value="{{ current_filters.search }}">{% endif %}
+                        {% if current_filters.department %}<input type="hidden" name="department" value="{{ current_filters.department }}">{% endif %}
+                        {% if current_filters.job_type %}<input type="hidden" name="job_type" value="{{ current_filters.job_type }}">{% endif %}
+                        {% if current_filters.experience %}<input type="hidden" name="experience" value="{{ current_filters.experience }}">{% endif %}
+                        <div class="select-wrapper-inline">
+                            <select name="location" onchange="this.form.submit()" class="styled-select-inline">
+                                <option value="">All Locations</option>
+                                {% for loc in locations %}
+                                <option value="{{ loc }}" {% if current_filters.location == loc %}selected{% endif %}>{{ loc }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow-inline"></i>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                
+                <!-- Clear Filters -->
+                {% if current_filters.department or current_filters.job_type or current_filters.experience or current_filters.location or current_filters.search %}
+                <div class="filter-separator">></div>
+                <div class="filter-cell filter-clear">
+                    <a href="{% url 'careers' %}" class="btn-clear-filters-inline">
+                        <i class="fas fa-times-circle"></i>
+                        Clear
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Jobs Listing -->
+        <div class="careers-jobs">
+                <div class="jobs-header">
+                    <h2>Open Positions</h2>
+                    <p class="jobs-count">{{ jobs|length }} job{{ jobs|length|pluralize }} available</p>
+                </div>
+                
+                {% if jobs %}
+                <div class="jobs-list">
+                    {% for job in jobs %}
+                    <div class="job-listing-card {% if job.featured %}featured{% endif %}">
+                        <div class="job-listing-header">
+                            <div>
+                                <h3>{{ job.title }}</h3>
+                                {% if job.department %}
+                                <span class="job-badge">{{ job.department }}</span>
+                                {% endif %}
+                                {% if job.featured %}
+                                <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="job-listing-meta">
+                            <span><i class="fas fa-briefcase"></i> {{ job.get_job_type_display }}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                            <span><i class="fas fa-user-graduate"></i> {{ job.get_experience_level_display }}</span>
+                            {% if job.salary_range %}
+                            <span><i class="fas fa-dollar-sign"></i> {{ job.salary_range }}</span>
+                            {% endif %}
+                        </div>
+                        <p class="job-listing-description">{{ job.short_description|truncatewords:40 }}</p>
+                        {% if job.technologies %}
+                        <div class="job-listing-tech">
+                            <strong>Technologies:</strong> {{ job.technologies|truncatewords:10 }}
+                        </div>
+                        {% endif %}
+                        {% if job.application_deadline %}
+                        <div class="job-listing-deadline">
+                            <i class="fas fa-calendar-alt"></i> <strong>Deadline:</strong> {{ job.application_deadline|date:"F d, Y" }}
+                        </div>
+                        {% endif %}
+                        <div class="job-listing-actions">
+                            <button class="btn btn-primary" onclick="openJobModal({{ job.id }})">View Details & Apply</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="no-jobs">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>No jobs found</h3>
+                    <p>Try adjusting your filters or check back later for new opportunities.</p>
+                    <a href="{% url 'careers' %}" class="btn btn-primary">View All Jobs</a>
+                </div>
+                {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Job Application Modal -->
+<div id="jobModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeJobModal()">&times;</span>
+        <div id="jobModalBody">
+            <!-- Job details and application form will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+

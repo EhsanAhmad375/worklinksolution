@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Project, TeamMember, Testimonial, ProjectRequest, SiteSetting
+from .models import Service, Project, TeamMember, Testimonial, ProjectRequest, SiteSetting, Job, JobApplication
 
 
 @admin.register(Service)
@@ -77,3 +77,62 @@ class SiteSettingAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request):
         return False if self.model.objects.count() > 0 else super().has_add_permission(request)
+
+
+@admin.register(Job)
+class JobAdmin(admin.ModelAdmin):
+    list_display = ['title', 'department', 'job_type', 'location', 'experience_level', 'is_active', 'featured', 'order', 'created_at']
+    list_editable = ['is_active', 'featured', 'order']
+    list_filter = ['job_type', 'experience_level', 'is_active', 'featured', 'department', 'created_at']
+    search_fields = ['title', 'department', 'location', 'short_description', 'full_description', 'technologies']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'department', 'job_type', 'experience_level', 'location', 'salary_range')
+        }),
+        ('Job Description', {
+            'fields': ('short_description', 'full_description')
+        }),
+        ('Requirements & Specifications', {
+            'fields': ('requirements', 'responsibilities', 'preferred_qualifications', 'technologies')
+        }),
+        ('Additional Details', {
+            'fields': ('benefits', 'application_deadline')
+        }),
+        ('Display Settings', {
+            'fields': ('is_active', 'featured', 'order')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(JobApplication)
+class JobApplicationAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'job', 'email', 'phone', 'current_position', 'status', 'submitted_at']
+    list_editable = ['status']
+    list_filter = ['status', 'job', 'submitted_at']
+    search_fields = ['full_name', 'email', 'phone', 'current_company', 'current_position']
+    readonly_fields = ['submitted_at', 'updated_at']
+    fieldsets = (
+        ('Job Information', {
+            'fields': ('job',)
+        }),
+        ('Personal Information', {
+            'fields': ('full_name', 'email', 'phone', 'current_location')
+        }),
+        ('Professional Information', {
+            'fields': ('current_position', 'current_company', 'years_of_experience', 'linkedin_url', 'portfolio_url')
+        }),
+        ('Application Materials', {
+            'fields': ('resume', 'cover_letter')
+        }),
+        ('Additional Information', {
+            'fields': ('availability', 'expected_salary', 'notice_period')
+        }),
+        ('Administration', {
+            'fields': ('status', 'notes', 'submitted_at', 'updated_at')
+        }),
+    )

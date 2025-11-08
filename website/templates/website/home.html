@@ -158,6 +158,73 @@
     </div>
 </section>
 
+<!-- Jobs/Careers Section -->
+<section id="jobs" class="jobs section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Join Our Team</h2>
+            <p class="section-subtitle">Explore exciting career opportunities with us</p>
+        </div>
+        <div class="jobs-grid">
+            {% for job in featured_jobs %}
+            <div class="job-card">
+                <div class="job-header">
+                    <h3>{{ job.title }}</h3>
+                    {% if job.department %}
+                    <span class="job-department">{{ job.department }}</span>
+                    {% endif %}
+                </div>
+                <div class="job-meta">
+                    <span class="job-type"><i class="fas fa-briefcase"></i> {{ job.get_job_type_display }}</span>
+                    <span class="job-location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                    <span class="job-experience"><i class="fas fa-user-graduate"></i> {{ job.get_experience_level_display }}</span>
+                </div>
+                <p class="job-description">{{ job.short_description|truncatewords:30 }}</p>
+                {% if job.salary_range %}
+                <div class="job-salary">
+                    <i class="fas fa-dollar-sign"></i> {{ job.salary_range }}
+                </div>
+                {% endif %}
+                {% if job.technologies %}
+                <div class="job-technologies">
+                    <strong>Technologies:</strong> {{ job.technologies|truncatewords:8 }}
+                </div>
+                {% endif %}
+                <div class="job-actions">
+                    <button class="btn btn-primary" onclick="openJobModal({{ job.id }})">View Details & Apply</button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="job-card">
+                <div class="job-header">
+                    <h3>Senior Software Developer</h3>
+                    <span class="job-department">Software Development</span>
+                </div>
+                <div class="job-meta">
+                    <span class="job-type"><i class="fas fa-briefcase"></i> Full Time</span>
+                    <span class="job-location"><i class="fas fa-map-marker-alt"></i> Remote</span>
+                    <span class="job-experience"><i class="fas fa-user-graduate"></i> Mid Level</span>
+                </div>
+                <p class="job-description">We are looking for an experienced software developer to join our team...</p>
+                <div class="job-actions">
+                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Job Application Modal -->
+<div id="jobModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeJobModal()">&times;</span>
+        <div id="jobModalBody">
+            <!-- Job details and application form will be loaded here -->
+        </div>
+    </div>
+</div>
+
 <!-- Testimonials Section -->
 <section id="testimonials" class="testimonials section section-dark">
     <div class="container">
