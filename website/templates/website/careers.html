@@ -16,7 +16,7 @@
 
 <!-- Careers Section -->
 <section class="careers-page section">
-    <div class="container">
+    <div class="container"> 
         <!-- Filters Row -->
         <div class="filters-row-container">
             <div class="filters-row-table">
@@ -175,13 +175,13 @@
                         </div>
                         {% endif %}
                         <div class="job-listing-actions">
-                        <button class="btn btn-primary" data-job-id="{{ job.id }}">View Details & Apply</button>
+                            <button class="btn btn-primary" onclick="openJobModal({{ job.id }})">View Details & Apply</button>
                         </div>
-                    </div>
+                    </div> 
                     {% endfor %}
                 </div>
                 {% else %}
-                <div class="no-jobs">
+                <div class="no-jobs"> 
                     <i class="fas fa-briefcase"></i> 
                     <h3>No jobs found</h3> 
                     <p>Try adjusting your filters or check back later for new opportunities.</p>

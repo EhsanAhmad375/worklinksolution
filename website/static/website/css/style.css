@@ -5,16 +5,20 @@
 /* CSS Variables - Color Scheme */
 :root {
     --primary-color: #206C8F;
+    --primary: #206C8F;
     --primary-dark: #10253C;
     --primary-light: #45D3DC;
     --secondary-color: #45D3DC;
+    --secondary: #45D3DC;
     --accent-color: #FAA624;
     --dark-bg: #10253C;
     --dark-card: #1a3a52;
     --text-primary: #10253C;
+    --text-dark: #10253C;
     --text-secondary: #4a5568;
     --text-light: #94a3b8;
-    --white: #FEFEFE;
+    --white: #FEFEFE; 
+    --light-bg: #e2e8f0;
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;
     --gray-200: #e2e8f0;
@@ -1347,6 +1351,7 @@ p {
     position: relative;
     width: 220px;
     flex-shrink: 0;
+    overflow: visible;
 }
 
 .search-input-wrapper-inline input {
@@ -1382,11 +1387,25 @@ p {
     justify-content: center;
     transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(32, 108, 143, 0.3);
+    z-index: 10;
+}
+
+.search-btn-inline i {
+    font-size: 1rem;
+    color: var(--white) !important;
+    display: inline-block;
+    line-height: 1;
+    font-weight: 900;
 }
 
 .search-btn-inline:hover {
     background: var(--secondary);
     transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 12px rgba(32, 108, 143, 0.4);
+}
+
+.search-btn-inline:hover i {
+    color: var(--white);
 }
 
 .select-wrapper-inline {
@@ -1459,6 +1478,7 @@ p {
     transition: all 0.3s ease;
     font-size: 0.85rem;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .btn-clear-filters-inline:hover {
@@ -1466,10 +1486,20 @@ p {
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(32, 108, 143, 0.3);
+    border-color: var(--primary);
+}
+
+.btn-clear-filters-inline:hover i {
+    color: var(--white) !important;
 }
 
 .btn-clear-filters-inline i {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    color: var(--primary) !important;
+    transition: color 0.3s ease;
+    display: inline-block;
+    line-height: 1;
+    font-weight: 900;
 }
 
 .careers-filters {
