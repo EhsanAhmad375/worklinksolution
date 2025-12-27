@@ -23,7 +23,8 @@ admin.site.site_header = "Worklink Coders"
 admin.site.site_title = "Worklink Coders"
 admin.site.index_title = "Welcome to Worklink Coders"
 urlpatterns = [
-    path('wlc/private/admin/', admin.site.urls),
+    path('wlc/private/admin/', admin.site.urls),  # Django default admin
+    path('admin-panel/', include('website.admin_urls')),  # Custom admin panel
     path('', include('website.urls')),
 ]
 

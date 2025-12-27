@@ -1,0 +1,107 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Project Requests{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-envelope"></i>
+            Project Requests
+        </h2>
+        <form method="get" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" name="search" value="{{ search }}" placeholder="Search requests..." style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+            <select name="status" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                <option value="">All Status</option>
+                <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
+                <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </form>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Project Type</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>
+                        <strong>{{ req.name }}</strong>
+                        {% if req.company_name %}
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            {{ req.company_name }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ req.email }}</td>
+                    <td>{{ req.project_type }}</td>
+                    <td>{{ req.budget|default:"-" }}</td>
+                    <td>
+                        {% if req.status == 'new' %}
+                        <span class="badge badge-info">{{ req.get_status_display }}</span>
+                        {% elif req.status == 'contacted' or req.status == 'in_progress' %}
+                        <span class="badge badge-warning">{{ req.get_status_display }}</span>
+                        {% elif req.status == 'completed' %}
+                        <span class="badge badge-success">{{ req.get_status_display }}</span>
+                        {% else %}
+                        <span class="badge badge-danger">{{ req.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ req.submitted_at|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'admin_project_request_detail' req.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No project requests found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if requests.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+        {% if requests.has_previous %}
+        <a href="?page={{ requests.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="btn btn-outline">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+        
+        <span style="padding: 0.875rem 1.75rem; background: var(--gray-100); border-radius: 10px; font-weight: 600;">
+            Page {{ requests.number }} of {{ requests.paginator.num_pages }}
+        </span>
+        
+        {% if requests.has_next %}
+        <a href="?page={{ requests.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="btn btn-outline">
+            Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

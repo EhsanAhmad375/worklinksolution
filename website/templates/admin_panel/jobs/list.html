@@ -1,0 +1,116 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Jobs{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-briefcase"></i>
+            Jobs Management
+        </h2>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <form method="get" style="display: flex; gap: 0.5rem; align-items: center;">
+                <select name="is_active" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                    <option value="">All Status</option>
+                    <option value="yes" {% if is_active == 'yes' %}selected{% endif %}>Active</option>
+                    <option value="no" {% if is_active == 'no' %}selected{% endif %}>Inactive</option>
+                </select>
+                <select name="featured" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                    <option value="">All</option>
+                    <option value="yes" {% if featured == 'yes' %}selected{% endif %}>Featured</option>
+                    <option value="no" {% if featured == 'no' %}selected{% endif %}>Not Featured</option>
+                </select>
+                <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </form>
+            <a href="{% url 'admin_job_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Job
+            </a>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Department</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>
+                        <strong>{{ job.title }}</strong>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            {{ job.short_description|truncatewords:8 }}
+                        </div>
+                    </td>
+                    <td>{{ job.department|default:"-" }}</td>
+                    <td>{{ job.get_job_type_display }}</td>
+                    <td>{{ job.location }}</td>
+                    <td>
+                        {% if job.is_active %}
+                        <span class="badge badge-success">Active</span>
+                        {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.featured %}
+                        <span class="badge badge-warning">Featured</span>
+                        {% else %}
+                        <span class="badge badge-info">Regular</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_job_edit' job.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'admin_job_delete' job.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No jobs found. <a href="{% url 'admin_job_create' %}" style="color: var(--primary);">Create your first job</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if jobs.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+        {% if jobs.has_previous %}
+        <a href="?page={{ jobs.previous_page_number }}{% if is_active %}&is_active={{ is_active }}{% endif %}{% if featured %}&featured={{ featured }}{% endif %}" class="btn btn-outline">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+        
+        <span style="padding: 0.875rem 1.75rem; background: var(--gray-100); border-radius: 10px; font-weight: 600;">
+            Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
+        </span>
+        
+        {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}{% if is_active %}&is_active={{ is_active }}{% endif %}{% if featured %}&featured={{ featured }}{% endif %}" class="btn btn-outline">
+            Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

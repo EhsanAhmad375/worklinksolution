@@ -1,0 +1,75 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Project Request Details{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-envelope"></i>
+            Project Request Details
+        </h2>
+        <a href="{% url 'admin_project_requests' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Contact Information</h3>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                    <p><strong>Name:</strong> {{ request.name }}</p>
+                    <p><strong>Email:</strong> <a href="mailto:{{ request.email }}">{{ request.email }}</a></p>
+                    <p><strong>Phone:</strong> {{ request.phone|default:"-" }}</p>
+                    <p><strong>Company:</strong> {{ request.company_name|default:"-" }}</p>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Project Information</h3>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                    <p><strong>Project Type:</strong> {{ request.project_type }}</p>
+                    <p><strong>Budget:</strong> {{ request.budget|default:"Not specified" }}</p>
+                    <p><strong>Submitted:</strong> {{ request.submitted_at|date:"F d, Y g:i A" }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Project Description</h3>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px; white-space: pre-line;">{{ request.description }}</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" name="status" required>
+                <option value="new" {% if request.status == 'new' %}selected{% endif %}>New</option>
+                <option value="contacted" {% if request.status == 'contacted' %}selected{% endif %}>Contacted</option>
+                <option value="in_progress" {% if request.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="completed" {% if request.status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="closed" {% if request.status == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Internal Notes</label>
+            <textarea id="notes" name="notes" style="min-height: 120px;">{{ request.notes|default:'' }}</textarea>
+            <div class="help-text">These notes are only visible to admins and not to the client.</div>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Request
+            </button>
+            <a href="{% url 'admin_project_requests' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

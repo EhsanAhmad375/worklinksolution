@@ -1,0 +1,186 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_services }}</div>
+        <div class="stat-label">
+            <i class="fas fa-cogs"></i>
+            Total Services
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #10b981;">
+            <i class="fas fa-check-circle"></i> {{ stats.active_services }} Active
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_projects }}</div>
+        <div class="stat-label">
+            <i class="fas fa-briefcase"></i>
+            Total Projects
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #FAA624;">
+            <i class="fas fa-star"></i> {{ stats.featured_projects }} Featured
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_team_members }}</div>
+        <div class="stat-label">
+            <i class="fas fa-users"></i>
+            Team Members
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #10b981;">
+            <i class="fas fa-check-circle"></i> {{ stats.active_team_members }} Active
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_testimonials }}</div>
+        <div class="stat-label">
+            <i class="fas fa-star"></i>
+            Testimonials
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #FAA624;">
+            <i class="fas fa-star"></i> {{ stats.featured_testimonials }} Featured
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_jobs }}</div>
+        <div class="stat-label">
+            <i class="fas fa-briefcase"></i>
+            Total Jobs
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #10b981;">
+            <i class="fas fa-check-circle"></i> {{ stats.active_jobs }} Active
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_job_applications }}</div>
+        <div class="stat-label">
+            <i class="fas fa-file-alt"></i>
+            Job Applications
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #FAA624;">
+            <i class="fas fa-clock"></i> {{ stats.pending_applications }} Pending
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_project_requests }}</div>
+        <div class="stat-label">
+            <i class="fas fa-envelope"></i>
+            Project Requests
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #206C8F;">
+            <i class="fas fa-bell"></i> {{ stats.new_requests }} New
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+    <!-- Recent Projects -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-briefcase"></i>
+                Recent Projects
+            </h2>
+            <a href="{% url 'admin_projects' %}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in recent_projects %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin_project_edit' project.id %}" style="color: var(--primary); text-decoration: none; font-weight: 500;">
+                                {{ project.title|truncatewords:5 }}
+                            </a>
+                        </td>
+                        <td>{{ project.get_category_display }}</td>
+                        <td>
+                            {% if project.featured %}
+                            <span class="badge badge-warning">Featured</span>
+                            {% else %}
+                            <span class="badge badge-info">Regular</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-secondary);">No projects yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Recent Project Requests -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-envelope"></i>
+                Recent Requests
+            </h2>
+            <a href="{% url 'admin_project_requests' %}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in recent_requests %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin_project_request_detail' req.id %}" style="color: var(--primary); text-decoration: none; font-weight: 500;">
+                                {{ req.name }}
+                            </a>
+                        </td>
+                        <td>{{ req.project_type|truncatewords:3 }}</td>
+                        <td>
+                            {% if req.status == 'new' %}
+                            <span class="badge badge-info">{{ req.get_status_display }}</span>
+                            {% elif req.status == 'contacted' %}
+                            <span class="badge badge-warning">{{ req.get_status_display }}</span>
+                            {% elif req.status == 'in_progress' %}
+                            <span class="badge badge-warning">{{ req.get_status_display }}</span>
+                            {% elif req.status == 'completed' %}
+                            <span class="badge badge-success">{{ req.get_status_display }}</span>
+                            {% else %}
+                            <span class="badge badge-danger">{{ req.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-secondary);">No requests yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

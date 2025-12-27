@@ -1,0 +1,111 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Job Application Details{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-file-alt"></i>
+            Job Application Details
+        </h2>
+        <a href="{% url 'admin_job_applications' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Personal Information</h3>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                    <p><strong>Name:</strong> {{ application.full_name }}</p>
+                    <p><strong>Email:</strong> {{ application.email }}</p>
+                    <p><strong>Phone:</strong> {{ application.phone }}</p>
+                    <p><strong>Location:</strong> {{ application.current_location|default:"-" }}</p>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Professional Information</h3>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                    <p><strong>Current Position:</strong> {{ application.current_position|default:"-" }}</p>
+                    <p><strong>Current Company:</strong> {{ application.current_company|default:"-" }}</p>
+                    <p><strong>Experience:</strong> {{ application.years_of_experience }} years</p>
+                    {% if application.linkedin_url %}
+                    <p><strong>LinkedIn:</strong> <a href="{{ application.linkedin_url }}" target="_blank">{{ application.linkedin_url }}</a></p>
+                    {% endif %}
+                    {% if application.portfolio_url %}
+                    <p><strong>Portfolio:</strong> <a href="{{ application.portfolio_url }}" target="_blank">{{ application.portfolio_url }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Job Information</h3>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                <p><strong>Job Title:</strong> {{ application.job.title }}</p>
+                <p><strong>Department:</strong> {{ application.job.department|default:"-" }}</p>
+                <p><strong>Location:</strong> {{ application.job.location }}</p>
+            </div>
+        </div>
+        
+        {% if application.resume %}
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Resume</h3>
+            <a href="{{ application.resume.url }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-download"></i> Download Resume
+            </a>
+        </div>
+        {% endif %}
+        
+        {% if application.cover_letter %}
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Cover Letter</h3>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px; white-space: pre-line;">{{ application.cover_letter }}</div>
+        </div>
+        {% endif %}
+        
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Additional Information</h3>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 10px;">
+                <p><strong>Availability:</strong> {{ application.availability|default:"-" }}</p>
+                <p><strong>Expected Salary:</strong> {{ application.expected_salary|default:"-" }}</p>
+                <p><strong>Notice Period:</strong> {{ application.notice_period|default:"-" }}</p>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" name="status" required>
+                <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending Review</option>
+                <option value="reviewed" {% if application.status == 'reviewed' %}selected{% endif %}>Under Review</option>
+                <option value="shortlisted" {% if application.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                <option value="interview" {% if application.status == 'interview' %}selected{% endif %}>Interview Scheduled</option>
+                <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>Accepted</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Internal Notes</label>
+            <textarea id="notes" name="notes" style="min-height: 120px;">{{ application.notes|default:'' }}</textarea>
+            <div class="help-text">These notes are only visible to admins and not to the applicant.</div>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Application
+            </button>
+            <a href="{% url 'admin_job_applications' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

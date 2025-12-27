@@ -1,0 +1,116 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Job Applications{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-file-alt"></i>
+            Job Applications
+        </h2>
+        <form method="get" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" name="search" value="{{ search }}" placeholder="Search applications..." style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+            <select name="status" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                <option value="">All Status</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="reviewed" {% if status_filter == 'reviewed' %}selected{% endif %}>Under Review</option>
+                <option value="shortlisted" {% if status_filter == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                <option value="interview" {% if status_filter == 'interview' %}selected{% endif %}>Interview Scheduled</option>
+                <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>Accepted</option>
+            </select>
+            <select name="job" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                <option value="">All Jobs</option>
+                {% for job in jobs %}
+                <option value="{{ job.id }}" {% if job_filter == job.id|stringformat:"s" %}selected{% endif %}>{{ job.title }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </form>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Job</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Experience</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>
+                        <strong>{{ application.full_name }}</strong>
+                        {% if application.current_position %}
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            {{ application.current_position }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ application.job.title }}</td>
+                    <td>{{ application.email }}</td>
+                    <td>{{ application.phone }}</td>
+                    <td>{{ application.years_of_experience }} years</td>
+                    <td>
+                        {% if application.status == 'pending' %}
+                        <span class="badge badge-info">{{ application.get_status_display }}</span>
+                        {% elif application.status == 'reviewed' or application.status == 'shortlisted' %}
+                        <span class="badge badge-warning">{{ application.get_status_display }}</span>
+                        {% elif application.status == 'accepted' %}
+                        <span class="badge badge-success">{{ application.get_status_display }}</span>
+                        {% else %}
+                        <span class="badge badge-danger">{{ application.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ application.submitted_at|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'admin_job_application_detail' application.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No job applications found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if applications.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+        {% if applications.has_previous %}
+        <a href="?page={{ applications.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if job_filter %}&job={{ job_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="btn btn-outline">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+        
+        <span style="padding: 0.875rem 1.75rem; background: var(--gray-100); border-radius: 10px; font-weight: 600;">
+            Page {{ applications.number }} of {{ applications.paginator.num_pages }}
+        </span>
+        
+        {% if applications.has_next %}
+        <a href="?page={{ applications.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if job_filter %}&job={{ job_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}" class="btn btn-outline">
+            Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

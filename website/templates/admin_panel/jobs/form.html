@@ -1,0 +1,139 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ action }} Job{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-{% if action == 'Create' %}plus{% else %}edit{% endif %}"></i>
+            {{ action }} Job
+        </h2>
+        <a href="{% url 'admin_jobs' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Job Title *</label>
+            <input type="text" id="title" name="title" value="{{ job.title|default:'' }}" required>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" value="{{ job.department|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="job_type">Job Type *</label>
+                <select id="job_type" name="job_type" required>
+                    <option value="full_time" {% if job.job_type == 'full_time' %}selected{% endif %}>Full Time</option>
+                    <option value="part_time" {% if job.job_type == 'part_time' %}selected{% endif %}>Part Time</option>
+                    <option value="contract" {% if job.job_type == 'contract' %}selected{% endif %}>Contract</option>
+                    <option value="internship" {% if job.job_type == 'internship' %}selected{% endif %}>Internship</option>
+                    <option value="remote" {% if job.job_type == 'remote' %}selected{% endif %}>Remote</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="experience_level">Experience Level *</label>
+                <select id="experience_level" name="experience_level" required>
+                    <option value="entry" {% if job.experience_level == 'entry' %}selected{% endif %}>Entry Level (0-2 years)</option>
+                    <option value="mid" {% if job.experience_level == 'mid' %}selected{% endif %}>Mid Level (2-5 years)</option>
+                    <option value="senior" {% if job.experience_level == 'senior' %}selected{% endif %}>Senior Level (5+ years)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location *</label>
+                <input type="text" id="location" name="location" value="{{ job.location|default:'' }}" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="salary_range">Salary Range</label>
+            <input type="text" id="salary_range" name="salary_range" value="{{ job.salary_range|default:'' }}" placeholder="e.g., $50,000 - $80,000">
+        </div>
+        
+        <div class="form-group">
+            <label for="short_description">Short Description *</label>
+            <textarea id="short_description" name="short_description" required>{{ job.short_description|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="full_description">Full Description *</label>
+            <textarea id="full_description" name="full_description" required style="min-height: 150px;">{{ job.full_description|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="requirements">Requirements *</label>
+            <textarea id="requirements" name="requirements" required style="min-height: 120px;">{{ job.requirements|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="responsibilities">Responsibilities *</label>
+            <textarea id="responsibilities" name="responsibilities" required style="min-height: 120px;">{{ job.responsibilities|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="preferred_qualifications">Preferred Qualifications</label>
+            <textarea id="preferred_qualifications" name="preferred_qualifications" style="min-height: 100px;">{{ job.preferred_qualifications|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="technologies">Technologies</label>
+            <input type="text" id="technologies" name="technologies" value="{{ job.technologies|default:'' }}" placeholder="e.g., Python, Django, React, PostgreSQL">
+        </div>
+        
+        <div class="form-group">
+            <label for="benefits">Benefits</label>
+            <textarea id="benefits" name="benefits" style="min-height: 100px;">{{ job.benefits|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="application_deadline">Application Deadline</label>
+                <input type="date" id="application_deadline" name="application_deadline" value="{% if job.application_deadline %}{{ job.application_deadline|date:'Y-m-d' }}{% endif %}">
+            </div>
+            
+            <div class="form-group">
+                <label for="order">Display Order</label>
+                <input type="number" id="order" name="order" value="{{ job.order|default:0 }}" min="0">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" name="is_active" {% if job.is_active or not job %}checked{% endif %}>
+                    <span>Active (Show on website)</span>
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" name="featured" {% if job.featured or not job %}checked{% endif %}>
+                    <span>Featured (Show on homepage)</span>
+                </label>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Job
+            </button>
+            <a href="{% url 'admin_jobs' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,81 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Team Members{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-users"></i>
+            Team Members Management
+        </h2>
+        <a href="{% url 'admin_team_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Member
+        </a>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in team_members %}
+                <tr>
+                    <td>
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gray-200);">
+                        {% else %}
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ member.name }}</strong>
+                        {% if member.email %}
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            <i class="fas fa-envelope"></i> {{ member.email }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ member.designation }}</td>
+                    <td>{{ member.order }}</td>
+                    <td>
+                        {% if member.is_active %}
+                        <span class="badge badge-success">Active</span>
+                        {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_team_edit' member.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'admin_team_delete' member.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No team members found. <a href="{% url 'admin_team_create' %}" style="color: var(--primary);">Add your first team member</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

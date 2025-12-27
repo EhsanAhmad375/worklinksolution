@@ -1,0 +1,120 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Projects{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-briefcase"></i>
+            Projects Management
+        </h2>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <form method="get" style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" name="search" value="{{ search }}" placeholder="Search projects..." style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                <select name="category" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                    <option value="">All Categories</option>
+                    <option value="web" {% if category == 'web' %}selected{% endif %}>Web Development</option>
+                    <option value="mobile" {% if category == 'mobile' %}selected{% endif %}>Mobile App</option>
+                    <option value="desktop" {% if category == 'desktop' %}selected{% endif %}>Desktop Application</option>
+                    <option value="ecommerce" {% if category == 'ecommerce' %}selected{% endif %}>E-Commerce</option>
+                    <option value="other" {% if category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+                <select name="featured" style="padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem;">
+                    <option value="">All</option>
+                    <option value="yes" {% if featured == 'yes' %}selected{% endif %}>Featured</option>
+                    <option value="no" {% if featured == 'no' %}selected{% endif %}>Not Featured</option>
+                </select>
+                <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+            </form>
+            <a href="{% url 'admin_project_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Project
+            </a>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Client</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td>
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid var(--gray-200);">
+                        {% else %}
+                        <div style="width: 80px; height: 60px; background: var(--gray-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ project.title }}</strong>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            {{ project.description|truncatewords:10 }}
+                        </div>
+                    </td>
+                    <td>{{ project.get_category_display }}</td>
+                    <td>{{ project.client_name|default:"-" }}</td>
+                    <td>
+                        {% if project.featured %}
+                        <span class="badge badge-warning">Featured</span>
+                        {% else %}
+                        <span class="badge badge-info">Regular</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_project_edit' project.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'admin_project_delete' project.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No projects found. <a href="{% url 'admin_project_create' %}" style="color: var(--primary);">Create your first project</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if projects.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+        {% if projects.has_previous %}
+        <a href="?page={{ projects.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if featured %}&featured={{ featured }}{% endif %}" class="btn btn-outline">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+        
+        <span style="padding: 0.875rem 1.75rem; background: var(--gray-100); border-radius: 10px; font-weight: 600;">
+            Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+        </span>
+        
+        {% if projects.has_next %}
+        <a href="?page={{ projects.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if featured %}&featured={{ featured }}{% endif %}" class="btn btn-outline">
+            Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ action }} Service{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-{% if action == 'Create' %}plus{% else %}edit{% endif %}"></i>
+            {{ action }} Service
+        </h2>
+        <a href="{% url 'admin_services' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" value="{{ service.title|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea id="description" name="description" required>{{ service.description|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="icon">Icon Class (Font Awesome) *</label>
+                <input type="text" id="icon" name="icon" value="{{ service.icon|default:'' }}" placeholder="e.g., fa-code" required>
+                <div class="help-text">
+                    Use Font Awesome icon classes. Example: fa-code, fa-mobile-alt, fa-desktop
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="order">Display Order</label>
+                <input type="number" id="order" name="order" value="{{ service.order|default:0 }}" min="0">
+                <div class="help-text">
+                    Lower numbers appear first
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="is_active" {% if service.is_active or not service %}checked{% endif %}>
+                <span>Active (Show on website)</span>
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Service
+            </button>
+            <a href="{% url 'admin_services' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

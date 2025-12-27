@@ -1,0 +1,95 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ action }} Team Member{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-{% if action == 'Create' %}plus{% else %}edit{% endif %}"></i>
+            {{ action }} Team Member
+        </h2>
+        <a href="{% url 'admin_team' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" value="{{ member.name|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="designation">Designation *</label>
+                <input type="text" id="designation" name="designation" value="{{ member.designation|default:'' }}" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio">{{ member.bio|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ member.email|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="order">Display Order</label>
+                <input type="number" id="order" name="order" value="{{ member.order|default:0 }}" min="0">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="linkedin">LinkedIn URL</label>
+                <input type="url" id="linkedin" name="linkedin" value="{{ member.linkedin|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="twitter">Twitter URL</label>
+                <input type="url" id="twitter" name="twitter" value="{{ member.twitter|default:'' }}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="github">GitHub URL</label>
+            <input type="url" id="github" name="github" value="{{ member.github|default:'' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="photo">Photo</label>
+            {% if member.photo %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ member.photo.url }}" alt="Current photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gray-200);">
+            </div>
+            {% endif %}
+            <input type="file" id="photo" name="photo" accept="image/*">
+        </div>
+        
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="is_active" {% if member.is_active or not member %}checked{% endif %}>
+                <span>Active (Show on website)</span>
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Team Member
+            </button>
+            <a href="{% url 'admin_team' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

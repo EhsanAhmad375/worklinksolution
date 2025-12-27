@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - Worklink Coders{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'admin_panel/css/style.css' %}?v=1.0">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'admin_dashboard' %}" class="logo">
+                <i class="fas fa-code"></i>
+                <span>Worklink Coders</span>
+            </a>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="{% url 'admin_dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <a href="{% url 'admin_services' %}" class="nav-item {% if 'service' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-cogs"></i>
+                <span>Services</span>
+            </a>
+            
+            <a href="{% url 'admin_projects' %}" class="nav-item {% if 'project' in request.resolver_match.url_name and 'request' not in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-briefcase"></i>
+                <span>Projects</span>
+            </a>
+            
+            <a href="{% url 'admin_team' %}" class="nav-item {% if 'team' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-users"></i>
+                <span>Team</span>
+            </a>
+            
+            <a href="{% url 'admin_testimonials' %}" class="nav-item {% if 'testimonial' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-star"></i>
+                <span>Testimonials</span>
+            </a>
+            
+            <a href="{% url 'admin_jobs' %}" class="nav-item {% if 'job' in request.resolver_match.url_name and 'application' not in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-briefcase"></i>
+                <span>Jobs</span>
+            </a>
+            
+            <a href="{% url 'admin_job_applications' %}" class="nav-item {% if 'job_application' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-file-alt"></i>
+                <span>Job Applications</span>
+            </a>
+            
+            <a href="{% url 'admin_project_requests' %}" class="nav-item {% if 'project_request' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-envelope"></i>
+                <span>Project Requests</span>
+            </a>
+            
+            <a href="{% url 'admin_settings' %}" class="nav-item {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="/" class="nav-item" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span>View Website</span>
+            </a>
+            <a href="{% url 'admin_logout' %}" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            <div class="topbar-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ user.get_full_name|default:user.username }}</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                {{ message }}
+                <button class="close-alert">&times;</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Page Content -->
+        <main class="content-area">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    <script src="{% static 'admin_panel/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

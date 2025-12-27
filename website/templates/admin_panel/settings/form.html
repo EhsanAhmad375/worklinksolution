@@ -1,0 +1,138 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-cog"></i>
+            Site Settings
+        </h2>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Company Branding</h3>
+        
+        <div class="form-group">
+            <label for="company_name">Company Name *</label>
+            <input type="text" id="company_name" name="company_name" value="{{ settings.company_name|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="tagline">Tagline *</label>
+            <input type="text" id="tagline" name="tagline" value="{{ settings.tagline|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="logo">Logo</label>
+            {% if settings.logo %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ settings.logo.url }}" alt="Current logo" style="max-width: 200px; max-height: 100px; border-radius: 8px; border: 2px solid var(--gray-200);">
+            </div>
+            {% endif %}
+            <input type="file" id="logo" name="logo" accept="image/*">
+            <div class="help-text">Recommended size: 200x60px or similar aspect ratio</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="website_url">Website URL</label>
+            <input type="url" id="website_url" name="website_url" value="{{ settings.website_url|default:'' }}">
+        </div>
+        
+        <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Contact Information</h3>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" value="{{ settings.email|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone *</label>
+                <input type="text" id="phone" name="phone" value="{{ settings.phone|default:'' }}" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="address">Address *</label>
+            <textarea id="address" name="address" required>{{ settings.address|default:'' }}</textarea>
+        </div>
+        
+        <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Social Media Links</h3>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="facebook_url">Facebook URL</label>
+                <input type="url" id="facebook_url" name="facebook_url" value="{{ settings.facebook_url|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="twitter_url">Twitter URL</label>
+                <input type="url" id="twitter_url" name="twitter_url" value="{{ settings.twitter_url|default:'' }}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="linkedin_url">LinkedIn URL</label>
+                <input type="url" id="linkedin_url" name="linkedin_url" value="{{ settings.linkedin_url|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="github_url">GitHub URL</label>
+                <input type="url" id="github_url" name="github_url" value="{{ settings.github_url|default:'' }}">
+            </div>
+        </div>
+        
+        <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-200);">Email Notification Settings</h3>
+        
+        <div class="form-group">
+            <label for="notification_email">Notification Email</label>
+            <input type="email" id="notification_email" name="notification_email" value="{{ settings.notification_email|default:'' }}">
+            <div class="help-text">Email address where project requests and job applications will be sent</div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="smtp_host">SMTP Host</label>
+                <input type="text" id="smtp_host" name="smtp_host" value="{{ settings.smtp_host|default:'' }}" placeholder="e.g., smtp.gmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp_port">SMTP Port</label>
+                <input type="number" id="smtp_port" name="smtp_port" value="{{ settings.smtp_port|default:587 }}" min="1" max="65535">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="smtp_username">SMTP Username</label>
+                <input type="email" id="smtp_username" name="smtp_username" value="{{ settings.smtp_username|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp_password">SMTP Password</label>
+                <input type="password" id="smtp_password" name="smtp_password" value="{{ settings.smtp_password|default:'' }}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="use_tls" {% if settings.use_tls or not settings.use_tls %}checked{% endif %}>
+                <span>Use TLS encryption (recommended)</span>
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-star"></i>
+            Testimonials Management
+        </h2>
+        <a href="{% url 'admin_testimonial_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Testimonial
+        </a>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Client Name</th>
+                    <th>Company</th>
+                    <th>Rating</th>
+                    <th>Featured</th>
+                    <th>Order</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for testimonial in testimonials %}
+                <tr>
+                    <td>
+                        <strong>{{ testimonial.client_name }}</strong>
+                        {% if testimonial.client_photo %}
+                        <div style="margin-top: 0.5rem;">
+                            <img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ testimonial.company_name|default:"-" }}</td>
+                    <td>
+                        <div style="color: #FAA624;">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= testimonial.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if testimonial.featured %}
+                        <span class="badge badge-warning">Featured</span>
+                        {% else %}
+                        <span class="badge badge-info">Regular</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ testimonial.order }}</td>
+                    <td>
+                        <a href="{% url 'admin_testimonial_edit' testimonial.id %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'admin_testimonial_delete' testimonial.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                        No testimonials found. <a href="{% url 'admin_testimonial_create' %}" style="color: var(--primary);">Create your first testimonial</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

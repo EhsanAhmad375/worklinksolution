@@ -1,0 +1,94 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ action }} Project{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-{% if action == 'Create' %}plus{% else %}edit{% endif %}"></i>
+            {{ action }} Project
+        </h2>
+        <a href="{% url 'admin_projects' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" style="padding: 1.5rem 0;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" value="{{ project.title|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea id="description" name="description" required>{{ project.description|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <select id="category" name="category" required>
+                    <option value="web" {% if project.category == 'web' %}selected{% endif %}>Web Development</option>
+                    <option value="mobile" {% if project.category == 'mobile' %}selected{% endif %}>Mobile App</option>
+                    <option value="desktop" {% if project.category == 'desktop' %}selected{% endif %}>Desktop Application</option>
+                    <option value="ecommerce" {% if project.category == 'ecommerce' %}selected{% endif %}>E-Commerce</option>
+                    <option value="other" {% if project.category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="order">Display Order</label>
+                <input type="number" id="order" name="order" value="{{ project.order|default:0 }}" min="0">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="client_name">Client Name</label>
+                <input type="text" id="client_name" name="client_name" value="{{ project.client_name|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="project_url">Project URL</label>
+                <input type="url" id="project_url" name="project_url" value="{{ project.project_url|default:'' }}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="technologies">Technologies (comma-separated)</label>
+            <input type="text" id="technologies" name="technologies" value="{{ project.technologies|default:'' }}" placeholder="e.g., Django, React, PostgreSQL">
+        </div>
+        
+        <div class="form-group">
+            <label for="image">Project Image</label>
+            {% if project.image %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ project.image.url }}" alt="Current image" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 2px solid var(--gray-200);">
+            </div>
+            {% endif %}
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="featured" {% if project.featured or not project %}checked{% endif %}>
+                <span>Featured (Show on homepage)</span>
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Project
+            </button>
+            <a href="{% url 'admin_projects' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
