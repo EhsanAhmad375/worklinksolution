@@ -18,11 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from website.views import custom_404
+admin.site.site_header = "Worklink Coders"
+admin.site.site_title = "Worklink Coders"
+admin.site.index_title = "Welcome to Worklink Coders"
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('wlc/private/admin/', admin.site.urls),
     path('', include('website.urls')),
 ]
+
+# Custom 404 handler
+handler404 = custom_404
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

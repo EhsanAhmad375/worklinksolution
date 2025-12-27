@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.core.mail import EmailMessage, get_connection
 from django.http import JsonResponse
+from django.views.defaults import page_not_found
 from .models import Service, Project, TeamMember, Testimonial, ProjectRequest, SiteSetting, Job, JobApplication
 
 
@@ -300,3 +301,8 @@ def get_job_details(request, job_id):
     }
     
     return JsonResponse(job_data)
+
+
+def custom_404(request, exception):
+    """Custom 404 error handler"""
+    return render(request, '404.html', status=404)

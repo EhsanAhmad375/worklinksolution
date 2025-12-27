@@ -230,13 +230,13 @@ function openJobModal(jobId) {
                             </div>
                             
                             <div class="form-row">
-                                <div class="form-group">
+                                <div class="form-group"> 
                                     <label for="availability">Availability (When can you start?)</label>
                                     <input type="text" id="availability" name="availability" placeholder="e.g., Immediately, 2 weeks">
                                 </div>
                                 <div class="form-group">
                                     <label for="expected_salary">Expected Salary</label>
-                                    <input type="text" id="expected_salary" name="expected_salary" placeholder="e.g., $50,000 - $70,000">
+                                    <input type="text" id="expected_salary" name="expected_salary" placeholder="e.g., PKR 50k - 70k">
                                 </div>
                             </div>
                             
